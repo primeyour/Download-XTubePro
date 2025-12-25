@@ -1,4 +1,7 @@
-# --- download_worker.py (Version 1.1 - Fixed DB Connection Logic) ---
+
+
+
+#Download.py
 
 import os
 import re
@@ -50,7 +53,7 @@ class Config:
 
     # --- Admin and Domain Config ---
     ADMIN_IDS = list(int(admin_id) for admin_id in os.environ.get("ADMIN_IDS", "0").split()) # IDs allowed to use bot commands
-    PROTECTED_DOMAIN = os.environ.get("PROTECTED_DOMAIN", "https://keralacaptain.rf.gd/").rstrip('/') + '/' # Default domain for stream handler
+    PROTECTED_DOMAIN = os.environ.get("PROTECTED_DOMAIN", "XTubePrr.xo.je").rstrip('/') + '/' # Default domain for stream handler
 
     # --- Database and Channel ---
     MONGO_URI = os.environ.get("MONGO_URI", "") # MongoDB connection string
@@ -125,7 +128,7 @@ try:
     if db is None:
         # Fallback to a default name if not in URI
         LOGGER.warning("Database name not found in MONGO_URI, falling back to 'KeralaCaptainBotDB'. Ensure URI includes DB name like '/YourDBName'.")
-        db = db_client['KeralaCaptainBotDB']
+        db = db_client['BotCDatabase']
     # --- End FIX ---
     LOGGER.info(f"Successfully connected to MongoDB and using database: {db.name}") # Log the actual DB name being used
 except Exception as e:
@@ -135,12 +138,11 @@ except Exception as e:
 
 
 # --- Collections ---
-# Need media collection to find post_id and update message_ids on FileRefExpired
-media_collection = db['media']
-# Need user_conversations for admin panel state
-user_conversations_col = db['conversations']
-# Need settings collection for dynamic domain
-settings_collection = db['settings']
+media_collection = db["media"]
+media_backup_collection = db["media_backup"]
+user_conversations_col = db["conversations"]
+settings_collection = db["settings"]
+libraries_collection = db["libraries"]
 
 
 # --- Database Functions (Only those needed for Worker/FileRef/Admin) ---
