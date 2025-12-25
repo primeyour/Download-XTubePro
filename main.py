@@ -1,3 +1,5 @@
+
+
 #Download.py
 
 import os
@@ -115,19 +117,19 @@ def get_readable_time(seconds: int) -> str:
 # -------------------------------------------------------------------------------- #
 # DATABASE OPERATIONS
 # -------------------------------------------------------------------------------- #
+# -------------------------------------------------------------------------------- #
+# DATABASE OPERATIONS
+# -------------------------------------------------------------------------------- #
 
 # --- Database Setup ---
 try:
     db_client = AsyncIOMotorClient(Config.MONGO_URI)
-    # Try to get DB name from URI first
-    db = db_client.get_database()
-    # --- FIX: Check using 'is None' ---
-    if db is None:
-        # Fallback to a default name if not in URI
-        LOGGER.warning("Database name not found in MONGO_URI, falling back to 'KeralaCaptainBotDB'. Ensure URI includes DB name like '/YourDBName'.")
-        db = db_client['BotCDatabase']
-    # --- End FIX ---
-    LOGGER.info(f"Successfully connected to MongoDB and using database: {db.name}") # Log the actual DB name being used
+    
+    # FIX: Directly selecting the database name to avoid "No default database defined" error.
+    # We are not using .get_database() because it raises an error instead of returning None if URI is empty.
+    db = db_client['BotCDatabase']
+    
+    LOGGER.info(f"Successfully connected to MongoDB and using database: {db.name}")
 except Exception as e:
     # Log the specific exception for better debugging
     LOGGER.critical(f"FATAL: Could not connect to MongoDB: {e}", exc_info=True)
